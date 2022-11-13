@@ -105,6 +105,13 @@ Token *tokenize_string_literal(Token *tok, Type *basety);
 Token *tokenize(File *file);
 Token *tokenize_file(char *filename);
 
+void token_debug_info(Token * tok);
+void file_debug_info(File * file);
+void type_debug_info(Type * type);
+void member_type_debug_info(Member * member);
+int no_nodes(Node * n, int depth);
+const char * tokenkind_to_string(TokenKind tok_kind);
+
 #define unreachable() \
   error("internal error at %s:%d", __FILE__, __LINE__)
 
@@ -316,6 +323,8 @@ typedef enum {
   TY_STRUCT,
   TY_UNION,
 } TypeKind;
+
+const char * typekind_to_string(TypeKind type_kind);
 
 struct Type {
   TypeKind kind;
