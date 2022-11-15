@@ -2,23 +2,41 @@
 
 void token_debug_info(Token * tok) {
   // kind,val,fval,*ty*,loc,*file*,line_no,beg
-  if(tok) {
-    printf("%s,", tokenkind_to_string(tok->kind));
-    if(tok->kind == TK_NUM) {
-      printf("%ld,", tok->val);
-      printf("%Lf,", tok->fval);
-    } else
-      printf(",,");
-    if(tok->kind == TK_STR || tok->kind == TK_NUM)
-      type_debug_info(tok->ty);
-    printf("%s,", tok->loc);
-    // Length isn't Pertinent to AI!
-    file_debug_info(tok->file);
-    printf("%d,", tok->line_no);
-    printf("%s,", tok->at_bol ? "y" : "n");
-    printf("\n");
-    token_debug_info(tok->next);
+  Token * tmp = next_var_line(tok, "bt");
+  if(tmp) {
+    while(!tmp->at_bol) {
+      printf("%s,", tokenkind_to_string(tmp->kind));
+      if(tmp->kind == TK_NUM) {
+        printf("%ld,", tmp->val);
+        printf("%Lf,", tmp->fval);
+      } else
+        printf(",,");
+      if(tmp->kind == TK_STR || tmp->kind == TK_NUM)
+        type_debug_info(tmp->ty);
+      printf("%s,", tmp->loc);
+      // Length isn't Pertinent to AI!
+      file_debug_info(tmp->file);
+      printf("%d,", tmp->line_no);
+      printf("%s,", tmp->at_bol ? "y" : "n");
+      printf("\n");
+      tmp = tmp->next;
+    }
+    token_debug_info(tmp);
   }
+}
+
+Token * next_var_line(Token * tok, const char * var) {
+  Token * tmp;
+  Token * line_start;
+  int has_var = 0;
+  while(!has_var && tok)
+    for(tmp = tok, line_start = tmp; !(tmp->at_bol); tmp = tmp->next)
+      if(!strncmp(tok->loc, var, sizeof(var)))
+        has_var = 1;
+  if(has_var)
+    return line_start;
+  else
+    return NULL;
 }
 
 void file_debug_info(File * file) {

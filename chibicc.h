@@ -111,6 +111,7 @@ void type_debug_info(Type * type);
 void member_type_debug_info(Member * member);
 int no_nodes(Node * n, int depth);
 const char * tokenkind_to_string(TokenKind tok_kind);
+Token * next_var_line(Token * tok, const char * var);
 
 #define unreachable() \
   error("internal error at %s:%d", __FILE__, __LINE__)
