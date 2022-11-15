@@ -1,11 +1,18 @@
 #include "chibicc.h"
 
+void print_headers(void) {
+  printf("id_literal,tok_kind,val,float_val,type_kind,type_size"
+    ",type_size_alignment,no_nodes_ctt,*members*\n");
+}
+
 void token_debug_info(Token * tok) {
   // kind,val,fval,*ty*,loc,*file*,line_no,beg
-  Token * tmp = next_var_line(tok, "bt");
+  Token * tmp = contains_var(tok, "bt");
   if(tmp) {
-    while(!tmp->at_bol) {
-      printf("%s,", tokenkind_to_string(tmp->kind));
+    do {
+      for(int i = 0; i < tmp->len; i++)
+        printf("%c", tmp->loc[i]);
+      printf(",%s,", tokenkind_to_string(tmp->kind));
       if(tmp->kind == TK_NUM) {
         printf("%ld,", tmp->val);
         printf("%Lf,", tmp->fval);
@@ -13,30 +20,27 @@ void token_debug_info(Token * tok) {
         printf(",,");
       if(tmp->kind == TK_STR || tmp->kind == TK_NUM)
         type_debug_info(tmp->ty);
-      printf("%s,", tmp->loc);
+      else
+        printf(",,,,,");
       // Length isn't Pertinent to AI!
-      file_debug_info(tmp->file);
       printf("%d,", tmp->line_no);
-      printf("%s,", tmp->at_bol ? "y" : "n");
+      printf("%s,", tmp->at_bol ? "at_bol" : "n_at_bol");
       printf("\n");
       tmp = tmp->next;
-    }
+    } while(!tmp->at_bol);
     token_debug_info(tmp);
   }
+  token_debug_info(tok->next);
 }
 
-Token * next_var_line(Token * tok, const char * var) {
-  Token * tmp;
-  Token * line_start;
-  int has_var = 0;
-  while(!has_var && tok)
-    for(tmp = tok, line_start = tmp; !(tmp->at_bol); tmp = tmp->next)
-      if(!strncmp(tok->loc, var, sizeof(var)))
-        has_var = 1;
-  if(has_var)
-    return line_start;
-  else
-    return NULL;
+Token * contains_var(Token * tok, const char * var) {
+  Token * tmp = tok;
+  do {
+    if(!strncmp(tmp->loc, var, 2))
+      return tok;
+    tmp = tmp->next;
+  } while(!tmp->at_bol);
+  return  NULL;
 }
 
 void file_debug_info(File * file) {
