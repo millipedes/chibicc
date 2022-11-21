@@ -10,11 +10,13 @@ void token_debug_info(Token * tok) {
   Token * tmp = contains_var(tok, "bt");
   if(tmp) {
     do {
-      if(tmp->loc[0] != ',')
+      if(tmp->loc[0] != ',' && tmp->loc[0] != ';')
         for(int i = 0; i < tmp->len; i++)
           printf("%c", tmp->loc[i]);
-      else
+      else if(tmp->loc[0] == ',')
         printf("comma");
+      else if(tmp->loc[0] == ';')
+        printf("semicolon");
       printf(",%s,", tokenkind_to_string(tmp->kind));
       if(tmp->kind == TK_NUM) {
         printf("%ld,", tmp->val);
