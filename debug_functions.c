@@ -6,7 +6,6 @@ void print_headers(void) {
 }
 
 void token_debug_info(Token * tok) {
-  // kind,val,fval,*ty*,loc,*file*,line_no,beg
   Token * tmp = contains_var(tok, "bt");
   if(tmp) {
     do {
@@ -26,11 +25,11 @@ void token_debug_info(Token * tok) {
       if(tmp->kind == TK_STR || tmp->kind == TK_NUM)
         type_debug_info(tmp->ty);
       else
-        printf(",,,,,");
+        printf(",,,,,,,");
       // Length isn't Pertinent to AI!
       printf("%d,", tmp->line_no);
       printf("%s,", tmp->at_bol ? "at_bol" : "n_at_bol");
-      printf("\n");
+      //printf("\n");
       tmp = tmp->next;
     } while(!tmp->at_bol);
     token_debug_info(tmp);
@@ -56,6 +55,9 @@ void type_debug_info(Type * type) {
   printf("%s,", typekind_to_string(type->kind));
   printf("%d,%d,%d,", type->size, type->align, no_nodes(type->vla_len, 0));
   printf("%s", type->members ? "memstart," : ",");
+  printf("%s", type->origin ? typekind_to_string(type->kind) : ",");
+  printf("%s", type->origin ? "," : "");
+  printf("%d,", type->array_len);
   if(type->members) {
     member_type_debug_info(type->members);
     printf("memend,");
@@ -109,4 +111,19 @@ const char * typekind_to_string(TypeKind type_kind) {
     case TY_UNION:   return "ty_union";
   }
   return "";
+}
+
+void obj_debug(Obj * ob) {
+  Obj * tmp = NULL;
+  while(ob) {
+    if(ob->params) {
+      do {
+        tmp = tmp ? ob->params : tmp->next;
+        type_debug_info(tmp->ty);
+      } while(tmp);
+      tmp = NULL;
+    }
+    ob = ob->next;
+  }
+  printf("\n");
 }

@@ -171,6 +171,8 @@ struct Obj {
   StringArray refs;
 };
 
+void obj_debug(Obj * ob);
+
 // Global variable can be initialized either by a constant expression
 // or a pointer to another global variable. This struct represents the
 // latter.
