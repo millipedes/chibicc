@@ -54,14 +54,14 @@ void file_debug_info(File * file) {
 void type_debug_info(Type * type) {
   printf("%s,", typekind_to_string(type->kind));
   printf("%d,%d,%d,", type->size, type->align, no_nodes(type->vla_len, 0));
-  printf("%s", type->members ? "memstart," : ",");
-  printf("%s", type->origin ? typekind_to_string(type->kind) : ",");
-  printf("%s", type->origin ? "," : "");
+  // printf("%s", type->members ? "memstart," : ",");
+  // printf("%s", type->origin ? typekind_to_string(type->kind) : ",");
+  // printf("%s", type->origin ? "," : "");
   printf("%d,", type->array_len);
-  if(type->members) {
-    member_type_debug_info(type->members);
-    printf("memend,");
-  }
+  // if(type->members) {
+  //   member_type_debug_info(type->members);
+  //   printf("memend,");
+  // }
 }
 
 void member_type_debug_info(Member * member) {
