@@ -1,8 +1,8 @@
 #include "chibicc.h"
 
 void print_headers(void) {
-  printf("id_literal,tok_kind,val,float_val,type_kind,type_size"
-    ",type_size_alignment,no_nodes_ctt,*members*\n");
+  printf("id_literal,tok_kind,val,float_val,type_kind,type_size,type_alignment"
+      ",no_nodes,array_len\n");
 }
 
 void token_debug_info(Token * tok) {
@@ -25,7 +25,7 @@ void token_debug_info(Token * tok) {
       if(tmp->kind == TK_STR || tmp->kind == TK_NUM)
         type_debug_info(tmp->ty);
       else
-        printf(",,,,,,,");
+        printf(",,,,,");
       // Length isn't Pertinent to AI!
       printf("%d,", tmp->line_no);
       printf("%s,", tmp->at_bol ? "at_bol" : "n_at_bol");
