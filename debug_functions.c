@@ -29,7 +29,7 @@ void token_debug_info(Token * tok) {
       // Length isn't Pertinent to AI!
       printf("%d,", tmp->line_no);
       printf("%s,", tmp->at_bol ? "at_bol" : "n_at_bol");
-      //printf("\n");
+      printf("\n");
       tmp = tmp->next;
     } while(!tmp->at_bol);
     token_debug_info(tmp);
