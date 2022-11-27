@@ -2,7 +2,7 @@
 
 void print_headers(void) {
   printf("id_literal,tok_kind,val,float_val,type_kind,type_size,type_alignment"
-      ",no_nodes,array_len\n");
+      ",no_nodes,array_len,line_no,at_beg_line\n");
 }
 
 void token_debug_info(Token * tok) {
